@@ -33,7 +33,7 @@ lib_linkdef     = $(wildcard $(call libdir,$(1))/LinkDef.h)
 lib_dictionary  = $(patsubst %/LinkDef.h,.build/%/LibDictionary.o,$(call lib_linkdef,$(1)))
 	
 CFLAGS += -DMAJOR_ROOT_VERSION=${MAJOR_ROOT_VERSION}
-ifeq ($(ROOT_PYTHON_VERSION),2.7)
+ifeq ($(ROOT_PYTHON_VERSION),2.7.5)
   CFLAGS += -DHAS_CORRECT_PYTHON_VERSION
 endif
 
@@ -88,7 +88,7 @@ INCLUDES  := $(addprefix -I$(CURDIR)/,$(INCLUDES)) -I$(shell grsi-config --incdi
 CFLAGS    += $(shell grsi-config --cflags)
 CFLAGS    += $(shell root-config --cflags)
 CFLAGS    += -MMD -MP $(INCLUDES)
-LINKFLAGS += $(shell root-config --glibs) -lSpectrum -lMinuit -lGuiHtml -lTreePlayer -lX11 -lXpm -lProof -lTMVA
+LINKFLAGS += $(shell root-config --glibs) -lSpectrum -lPyROOT -lMinuit -lGuiHtml -lTreePlayer -lX11 -lXpm -lProof -lTMVA
 LINKFLAGS += $(shell grsi-config --all-libs)
 LINKFLAGS += $(shell grsi-config --GRSIData-libs)
 
