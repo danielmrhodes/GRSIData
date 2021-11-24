@@ -133,7 +133,7 @@ void TSharc::BuildHits()
 		bool front_used = false;
 		bool back_used  = false;
 		for(back = fBackFragments.begin(); back != fBackFragments.end(); back++) {
-			if(front->GetDetector() == back->GetDetector()) {
+			if(front->GetDetector() == back->GetDetector() && abs(front->GetEnergy() - back->GetEnergy())<300 && abs(front->GetTime() - back->GetTime()) < 200) {
 				front_used = true;
 				back_used  = true;
 				break;
