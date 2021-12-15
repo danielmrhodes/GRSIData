@@ -8,7 +8,8 @@
 void MakeTigress(TRuntimeObjects& obj, TTigress& tigress) {
 
   std::string dirname = "Tigress";
-  for(int i=0;i<tigress.GetMultiplicity();i++) {
+  int mult = tigress.GetMultiplicity();
+  for(int i=0;i<mult;i++) {
     TTigressHit* hit = tigress.GetTigressHit(i);
     
     int det = hit->GetDetector();
@@ -16,6 +17,8 @@ void MakeTigress(TRuntimeObjects& obj, TTigress& tigress) {
 
     obj.FillHistogram(dirname,"Energy",4000,0,4000,en);
     obj.FillHistogram(dirname,"Energy_v_Det",20,0,20,det,4000,0,4000,en);
+
+    obj.FillHistogram(dirname,Form("Energy_Mult%02d",mult),4000,0,4000,en);
 
   }
 
@@ -119,8 +122,8 @@ void MakeSharcTigress(TRuntimeObjects& obj, TSharc& sharc, TTigress& tigress) {
 
       double en = tig_hit->GetEnergy();
 
-      obj.FillHistogram(dirname,"TDiff",4000,-4000,4000,tdiff);
-      obj.FillHistogram(dirname,"TigE_v_TDiff",1000,-2000,2000,tdiff,2000,0,4000,en);
+      obj.FillHistogram(dirname,"TDiff",10000,-20000,20000,tdiff);
+      obj.FillHistogram(dirname,"TigE_v_TDiff",1000,-4000,4000,tdiff,2000,0,4000,en);
 
     }
 
@@ -146,8 +149,8 @@ void MakeTrificTigress(TRuntimeObjects& obj, TTrific& trific, TTigress& tigress)
 
       double en = tig_hit->GetEnergy();
       
-      obj.FillHistogram(dirname,"TDiff",4000,-4000,4000,tdiff);
-      obj.FillHistogram(dirname,"TigE_v_TDiff",1000,-2000,2000,tdiff,2000,0,4000,en);
+      obj.FillHistogram(dirname,"TDiff",10000,-20000,20000,tdiff);
+      obj.FillHistogram(dirname,"TigE_v_TDiff",1000,-4000,4000,tdiff,2000,0,4000,en);
 
     }
 
@@ -246,7 +249,7 @@ void MakeTrificGatedTigress(TRuntimeObjects& obj, TTrific& trific, TTigress& tig
       long trf_time = trf_hit->GetTimeStamp();
       long tdiff = tig_time - trf_time;
 
-      if(tdiff > 33 || tdiff < 52) {
+      if(tdiff > -500 || tdiff < 550) {
 	partner = j;
 	break;
       }
@@ -277,12 +280,12 @@ extern "C"
 void MakeAnalysisHistograms(TRuntimeObjects& obj) {
 
   TList *gates = &(obj.GetGates());
-  if(gates_loaded!=gates->GetSize()) {
+  if(gates_loaded != gates->GetSize()) {
     
     TIter iter(gates);
     while(TObject *obj1 = iter.Next()) {
       
-      GCutG *gate = (GCutG*)obj1;
+      GCutG* gate = (GCutG*)obj1;
       std::string tag = gate->GetTag();
       std::string name = gate->GetName();
       
@@ -310,8 +313,8 @@ void MakeAnalysisHistograms(TRuntimeObjects& obj) {
 
   std::shared_ptr<TTigress> tigress = obj.GetDetector<TTigress>();
   std::shared_ptr<TSharc> sharc = obj.GetDetector<TSharc>();
-  std::shared_ptr<TTrific> trific = obj.GetDetector<TTrific>();
-  
+  std::shared_ptr<TTrific> trific = obj.GetDetector<TTrific>();  
+
   if(tigress) {
     MakeTigress(obj,*tigress);
   }
