@@ -138,7 +138,7 @@ run_and_test =@printf "%b%b%b" " $(3)$(4)$(5)" $(notdir $(2)) "$(NO_COLOR)\r";  
                 rm -f $(2).log $(2).error
 endif
 
-all: include/GRSIDataVersion.h $(LIBRARY_OUTPUT) lib/libGRSIData.so $(HISTOGRAM_SO) $(EXECUTABLES)
+all: include/GRSIDataVersion.h $(LIBRARY_OUTPUT) lib/libGRSIData.so $(HISTOGRAM_SO) $(FILTER_SO) $(EXECUTABLES)
 	@$(FIND) .build -name "*.pcm" -exec cp {} lib/ \;
 	@$(FIND) .build -name "*.rootmap" -exec cp {} lib/ \;
 	@printf "$(OK_COLOR)Compilation successful, $(WARN_COLOR)woohoo!$(NO_COLOR)\n"
@@ -159,6 +159,9 @@ include/GRSIDataVersion.h:
 	$(call run_and_test,util/gen_version.sh,$@,$(COM_COLOR),$(COM_STRING),$(OBJ_COLOR) )
 
 lib/lib%.so: $(LIBRARY_OUTPUT) .build/histos/%.o | include/GRSIDataVersion.h lib
+	$(call run_and_test,$(CPP) -fPIC $^ $(SHAREDSWITCH)lib$*.so $(ROOT_LIBFLAGS) -Llib $(addprefix -l,$(LIBRARY_NAMES)) -o $@,$@,$(BLD_COLOR),$(BLD_STRING),$(OBJ_COLOR) )
+
+lib/lib%.so: $(LIBRARY_OUTPUT) .build/filters/%.o | include/GRSIDataVersion.h lib
 	$(call run_and_test,$(CPP) -fPIC $^ $(SHAREDSWITCH)lib$*.so $(ROOT_LIBFLAGS) -Llib $(addprefix -l,$(LIBRARY_NAMES)) -o $@,$@,$(BLD_COLOR),$(BLD_STRING),$(OBJ_COLOR) )
 
 lib/lib%.so: $$(call lib_o_files,%) $$(call lib_dictionary,%) | include/GRSIDataVersion.h lib
