@@ -129,6 +129,30 @@ void MakeSharcTigress(TRuntimeObjects& obj, TSharc& sharc, TTigress& tigress) {
 
   }
 
+  if(sharc.GetMultiplicity() > 0) {
+    for(int i=0;i<tigress.GetMultiplicity();i++) {
+      TTigressHit* hit = tigress.GetTigressHit(i);
+    
+      int det = hit->GetDetector();
+      double en = hit->GetEnergy();
+
+      obj.FillHistogram(dirname,"Tigress_Energy_1",4000,0,4000,en);
+      obj.FillHistogram(dirname,"Tigress_Energy_1_v_Det",20,0,20,det,4000,0,4000,en);
+
+    }
+  }
+
+  for(int i=0;i<tigress.GetMultiplicity();i++) {
+    TTigressHit* hit = tigress.GetTigressHit(i);
+    
+    int det = hit->GetDetector();
+    double en = hit->GetEnergy();
+
+    obj.FillHistogram(dirname,"Tigress_Energy",4000,0,4000,en);
+    obj.FillHistogram(dirname,"Tigress_Energy_v_Det",20,0,20,det,4000,0,4000,en);
+
+  }
+
   return;
   
 }
@@ -153,6 +177,17 @@ void MakeTrificTigress(TRuntimeObjects& obj, TTrific& trific, TTigress& tigress)
       obj.FillHistogram(dirname,"TigE_v_TDiff",1000,-4000,4000,tdiff,2000,0,4000,en);
 
     }
+
+  }
+
+  for(int i=0;i<tigress.GetMultiplicity();i++) {
+    TTigressHit* hit = tigress.GetTigressHit(i);
+    
+    int det = hit->GetDetector();
+    double en = hit->GetEnergy();
+
+    obj.FillHistogram(dirname,"Tigress_Energy",4000,0,4000,en);
+    obj.FillHistogram(dirname,"Tigress_Energy_v_Det",20,0,20,det,4000,0,4000,en);
 
   }
 
@@ -319,6 +354,7 @@ void MakeAnalysisHistograms(TRuntimeObjects& obj) {
     MakeTigress(obj,*tigress);
   }
 
+  /*
   if(sharc) {
     MakeSharc(obj,*sharc);
   }
@@ -326,6 +362,7 @@ void MakeAnalysisHistograms(TRuntimeObjects& obj) {
   if(trific) {
     MakeTrific(obj,*trific);
   }
+  */
 
   if(sharc && tigress) {
     MakeSharcTigress(obj,*sharc,*tigress);
@@ -335,6 +372,7 @@ void MakeAnalysisHistograms(TRuntimeObjects& obj) {
     }
   }
   
+  /*
   if(trific && tigress) {
     MakeTrificTigress(obj,*trific,*tigress);
 
@@ -342,8 +380,7 @@ void MakeAnalysisHistograms(TRuntimeObjects& obj) {
       MakeTrificGatedTigress(obj,*trific,*tigress,gate);
     }
   }
-
-
+  */
 
   return;
 
